@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Repository
@@ -22,5 +23,14 @@ public class UserRepository {
     public void deleteAll() {
         userDataSource.clear();
         maxId.set(0);
+    }
+
+    public Optional<User> findOneById(long id) {
+        for (User user : userDataSource) {
+            if (user.getId() == id) {
+                return Optional.of(user);
+            }
+        }
+        return Optional.empty();
     }
 }

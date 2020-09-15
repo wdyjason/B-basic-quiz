@@ -1,6 +1,7 @@
 package com.wdyjason.basicquiz.service;
 
 import com.wdyjason.basicquiz.domain.User;
+import com.wdyjason.basicquiz.exception.UserNotFoundException;
 import com.wdyjason.basicquiz.repository.EducationRepository;
 import com.wdyjason.basicquiz.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,7 +10,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class UserServiceTest {
@@ -48,5 +52,37 @@ class UserServiceTest {
         Long restult = userService.save(receivedUser);
 
         assertEquals(restult, 1L);
+    }
+
+    @Test
+    public void shouldGetAUserSuccessfully() throws UserNotFoundException {
+        Long userId = 1L;
+
+        User returnedUser = User.builder()
+                .id(1L)
+                .name("test")
+                .avatar("url")
+                .description("des")
+                .build();
+
+        User expectedUser = User.builder()
+                .id(userId)
+                .name("test")
+                .avatar("url")
+                .description("des")
+                .build();
+        when(userRepository.findOneById(userId)).thenReturn(Optional.of(returnedUser));
+
+        User result = userService.findOne(userId);
+
+        assertEquals(expectedUser, result);
+    }
+
+    @Test
+    public void shouldGetAUserFailure() {
+        when(userRepository.findOneById(1L)).thenReturn(Optional.empty());
+
+        assertThrows(UserNotFoundException.class, () ->userService.findOne(1L));
+
     }
 }
