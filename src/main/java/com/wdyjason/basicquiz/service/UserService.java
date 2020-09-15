@@ -8,6 +8,7 @@ import com.wdyjason.basicquiz.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -29,7 +30,7 @@ public class UserService {
         return userRepository.save(receivedUser).getId();
     }
 
-    public User findOne(Long userId) throws UserNotFoundException {
+    public User findOneUser(Long userId) throws UserNotFoundException {
         Optional<User> findResult = userRepository.findOneById(userId);
         if (!findResult.isPresent()) {
             throw new UserNotFoundException("user not found!");
@@ -39,5 +40,9 @@ public class UserService {
 
     public Education saveEducation(Education receivedEdu) {
         return educationRepository.save(receivedEdu);
+    }
+
+    public List<Education> findUserEducations(long userId) {
+        return educationRepository.findByUserId(userId);
     }
 }

@@ -11,6 +11,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -74,7 +76,7 @@ class UserServiceTest {
                 .build();
         when(userRepository.findOneById(userId)).thenReturn(Optional.of(returnedUser));
 
-        User result = userService.findOne(userId);
+        User result = userService.findOneUser(userId);
 
         assertEquals(expectedUser, result);
     }
@@ -83,7 +85,7 @@ class UserServiceTest {
     public void shouldGetAUserFailure() {
         when(userRepository.findOneById(1L)).thenReturn(Optional.empty());
 
-        assertThrows(UserNotFoundException.class, () ->userService.findOne(1L));
+        assertThrows(UserNotFoundException.class, () ->userService.findOneUser(1L));
 
     }
 
@@ -116,5 +118,31 @@ class UserServiceTest {
 
         Education result = userService.saveEducation(receivedEdu);
         assertEquals(result, expectEdu);
+    }
+
+    @Test
+    public void shouldGetEducationsSuccess() {
+        Education returnedEdu = Education.builder()
+                .id(1L)
+                .userId(1L)
+                .year(2020L)
+                .title("title")
+                .description("des")
+                .build();
+
+        Education expectEdu = Education.builder()
+                .id(1L)
+                .userId(1L)
+                .year(2020L)
+                .title("title")
+                .description("des")
+                .build();
+
+        when(educationRepository.findByUserId(1L)).thenReturn(Arrays.asList(returnedEdu));
+
+        List<Education> result = userService.findUserEducations(1L);
+
+        assertEquals(Arrays.asList(expectEdu), result);
+
     }
 }

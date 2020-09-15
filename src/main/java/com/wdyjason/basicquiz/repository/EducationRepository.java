@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 @Repository
 public class EducationRepository {
@@ -23,5 +24,11 @@ public class EducationRepository {
     public void deleteAll() {
         educationDataSource.clear();
         nextId.set(0);
+    }
+
+    public List<Education> findByUserId(long userId) {
+        return educationDataSource.stream()
+                .filter(f -> f.getUserId() == userId)
+                .collect(Collectors.toList());
     }
 }

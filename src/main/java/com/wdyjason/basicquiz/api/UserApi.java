@@ -23,7 +23,7 @@ public class UserApi {
 
     @GetMapping("/{id}")
     public User getAUser(@PathVariable Long id) throws UserNotFoundException {
-        return userService.findOne(id);
+        return userService.findOneUser(id);
     }
 
     @PostMapping("/{id}/educations")
