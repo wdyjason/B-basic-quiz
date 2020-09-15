@@ -1,6 +1,8 @@
 package com.wdyjason.basicquiz.api;
 
+import com.wdyjason.basicquiz.domain.Education;
 import com.wdyjason.basicquiz.domain.User;
+import com.wdyjason.basicquiz.repository.EducationRepository;
 import com.wdyjason.basicquiz.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,11 +28,23 @@ class UserApiTest {
     @Autowired
     private UserRepository userRepository;
 
-    private Long savedId;
+    @Autowired
+    private EducationRepository educationRepository;
+
+    private Long savedUserId;
+    private Long savedEduId;
+
     @BeforeEach
     public void setUp() {
         userRepository.deleteAll();
-        savedId = userRepository.save(User.builder().name("test").avatar("url").description("des").build()).getId();
+        educationRepository.deleteAll();
+        savedUserId = userRepository.save(User.builder().name("test").avatar("url").description("des").build()).getId();
+        savedEduId = educationRepository.save(Education.builder()
+                .userId(savedUserId)
+                .title("title")
+                .year(2020L)
+                .description("des")
+                .build()).getId();
     }
 
     @Test
@@ -43,11 +57,22 @@ class UserApiTest {
 
     @Test
     public void shouldGetAUserSuccessfully() throws Exception {
-        mockMvc.perform(get("/users/{id}", savedId))
-                .andExpect(jsonPath("$.id", is(savedId.intValue())))
+        mockMvc.perform(get("/users/{id}", savedUserId))
+                .andExpect(jsonPath("$.id", is(savedUserId.intValue())))
                 .andExpect(jsonPath("$.name", is("test")))
                 .andExpect(jsonPath("$.avatar", is("url")))
                 .andExpect(jsonPath("$.description", is("des")))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void shouldCreateEducationSuccess() throws Exception {
+        String postEdu = "{\"userId\":1, \"year\":2020, \"title\":\"title\", \"description\":\"des\"}";
+        mockMvc.perform(post("/users/{id}/educations", 1).content(postEdu).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.userId", is(1)))
+                .andExpect(jsonPath("$.title", is("title")))
+                .andExpect(jsonPath("$.year", is(2020)))
+                .andExpect(jsonPath("$.description", is("des")))
+                .andExpect(status().isCreated());
     }
 }

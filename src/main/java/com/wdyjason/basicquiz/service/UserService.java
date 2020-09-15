@@ -25,7 +25,7 @@ public class UserService {
     }
 
 
-    public Long save(User receivedUser) {
+    public Long saveUser(User receivedUser) {
         return userRepository.save(receivedUser).getId();
     }
 

@@ -19,4 +19,9 @@ public class EducationRepository {
         educationDataSource.add(receivedEdu);
         return receivedEdu;
     }
+
+    public void deleteAll() {
+        educationDataSource.clear();
+        nextId.set(0);
+    }
 }

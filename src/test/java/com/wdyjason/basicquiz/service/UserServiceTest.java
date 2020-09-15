@@ -50,9 +50,9 @@ class UserServiceTest {
 
         when(userRepository.save(receivedUser)).thenReturn(returnedUser);
 
-        Long restult = userService.save(receivedUser);
+        Long result = userService.saveUser(receivedUser);
 
-        assertEquals(restult, 1L);
+        assertEquals(result, 1L);
     }
 
     @Test
