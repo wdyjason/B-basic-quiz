@@ -1,5 +1,6 @@
 package com.wdyjason.basicquiz.service;
 
+import com.wdyjason.basicquiz.domain.User;
 import com.wdyjason.basicquiz.repository.EducationRepository;
 import com.wdyjason.basicquiz.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,4 +21,7 @@ public class UserService {
     }
 
 
+    public Long save(User receivedUser) {
+        return userRepository.save(receivedUser).getId();
+    }
 }
