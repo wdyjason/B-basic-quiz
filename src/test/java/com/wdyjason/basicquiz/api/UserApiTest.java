@@ -75,4 +75,15 @@ class UserApiTest {
                 .andExpect(jsonPath("$.description", is("des")))
                 .andExpect(status().isCreated());
     }
+
+    @Test
+    public void shouldGetEducationsSuccess() throws Exception {
+        mockMvc.perform(get("/users/{id}/educations", savedUserId))
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].userId", is(savedUserId.intValue())))
+                .andExpect(jsonPath("$[0].title", is("title")))
+                .andExpect(jsonPath("$[0].year", is(2020)))
+                .andExpect(jsonPath("$[0].description", is("des")))
+                .andExpect(status().isOk());
+    }
 }
