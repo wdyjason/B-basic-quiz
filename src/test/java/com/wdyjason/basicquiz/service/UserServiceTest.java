@@ -1,5 +1,6 @@
 package com.wdyjason.basicquiz.service;
 
+import com.wdyjason.basicquiz.domain.Education;
 import com.wdyjason.basicquiz.domain.User;
 import com.wdyjason.basicquiz.exception.UserNotFoundException;
 import com.wdyjason.basicquiz.repository.EducationRepository;
@@ -84,5 +85,36 @@ class UserServiceTest {
 
         assertThrows(UserNotFoundException.class, () ->userService.findOne(1L));
 
+    }
+
+    @Test
+    public void shouldCreateEducationSuccess() {
+        Education receivedEdu = Education.builder()
+                .userId(1L)
+                .year(2020L)
+                .title("title")
+                .description("des")
+                .build();
+
+        Education returnedEdu = Education.builder()
+                .id(1L)
+                .userId(1L)
+                .year(2020L)
+                .title("title")
+                .description("des")
+                .build();
+
+        Education expectEdu = Education.builder()
+                .id(1L)
+                .userId(1L)
+                .year(2020L)
+                .title("title")
+                .description("des")
+                .build();
+
+        when(educationRepository.save(receivedEdu)).thenReturn(returnedEdu);
+
+        Education result = userService.saveEducation(receivedEdu);
+        assertEquals(result, expectEdu);
     }
 }

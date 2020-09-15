@@ -1,5 +1,6 @@
 package com.wdyjason.basicquiz.service;
 
+import com.wdyjason.basicquiz.domain.Education;
 import com.wdyjason.basicquiz.domain.User;
 import com.wdyjason.basicquiz.exception.UserNotFoundException;
 import com.wdyjason.basicquiz.repository.EducationRepository;
@@ -34,5 +35,9 @@ public class UserService {
             throw new UserNotFoundException("user not found!");
         }
         return findResult.get();
+    }
+
+    public Education saveEducation(Education receivedEdu) {
+        return educationRepository.save(receivedEdu);
     }
 }

@@ -7,14 +7,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
 public class UserRepository {
     private final List<User> userDataSource = new ArrayList<User>();
-    private static AtomicInteger maxId = new AtomicInteger(0); //
+    private static AtomicLong nextId = new AtomicLong(0); //
 
     public User save(User receivedUser) {
-        Long newId = (long) maxId.incrementAndGet();
+        Long newId = nextId.incrementAndGet();
         receivedUser.setId(newId);
         userDataSource.add(receivedUser);
         return receivedUser;
@@ -22,7 +23,7 @@ public class UserRepository {
 
     public void deleteAll() {
         userDataSource.clear();
-        maxId.set(0);
+        nextId.set(0);
     }
 
     public Optional<User> findOneById(long id) {
