@@ -18,4 +18,9 @@ public class UserRepository {
         userDataSource.add(receivedUser);
         return receivedUser;
     }
+
+    public void deleteAll() {
+        userDataSource.clear();
+        maxId.set(0);
+    }
 }
