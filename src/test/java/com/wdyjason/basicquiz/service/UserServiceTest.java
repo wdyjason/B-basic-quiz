@@ -94,7 +94,7 @@ class UserServiceTest {
     }
 
     @Test
-    public void shouldCreateEducationSuccess() {
+    public void shouldCreateEducationSuccess() throws UserNotFoundException {
         Education receivedEdu = Education.builder()
                 .year(2020L)
                 .title("title")

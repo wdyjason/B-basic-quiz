@@ -8,8 +8,10 @@ import com.wdyjason.basicquiz.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -38,12 +40,15 @@ public class UserService {
         return findResult.get();
     }
 
-    public Education saveEducation(Long userId, Education receivedEdu) {
+    public Education saveEducation(Long userId, Education receivedEdu) throws UserNotFoundException {
+        findOneUser(userId);
         receivedEdu.setUserId(userId);
         return educationRepository.save(receivedEdu);
     }
 
     public List<Education> findUserEducations(long userId) {
-        return educationRepository.findByUserId(userId);
+        return educationRepository.findByUserId(userId).stream()
+                .sorted(Comparator.comparing(Education::getYear))
+                .collect(Collectors.toList());
     }
 }

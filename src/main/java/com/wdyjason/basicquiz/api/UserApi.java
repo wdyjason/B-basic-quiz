@@ -33,7 +33,7 @@ public class UserApi {
     @PostMapping("/{id}/educations")
     @ResponseStatus(HttpStatus.CREATED)
     public Education createAnEducation(@RequestBody @Valid Education education,
-                                        @PathVariable(name = "id") Long userId) {
+                                        @PathVariable(name = "id") Long userId) throws UserNotFoundException {
         return userService.saveEducation(userId, education);
     }
 
