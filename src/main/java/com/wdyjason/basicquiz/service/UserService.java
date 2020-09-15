@@ -38,7 +38,8 @@ public class UserService {
         return findResult.get();
     }
 
-    public Education saveEducation(Education receivedEdu) {
+    public Education saveEducation(Long userId, Education receivedEdu) {
+        receivedEdu.setUserId(userId);
         return educationRepository.save(receivedEdu);
     }
 

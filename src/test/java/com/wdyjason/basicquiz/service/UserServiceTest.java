@@ -96,7 +96,6 @@ class UserServiceTest {
     @Test
     public void shouldCreateEducationSuccess() {
         Education receivedEdu = Education.builder()
-                .userId(1L)
                 .year(2020L)
                 .title("title")
                 .description("des")
@@ -120,7 +119,7 @@ class UserServiceTest {
 
         when(educationRepository.save(receivedEdu)).thenReturn(returnedEdu);
 
-        Education result = userService.saveEducation(receivedEdu);
+        Education result = userService.saveEducation(1L, receivedEdu);
         assertEquals(result, expectEdu);
     }
 
