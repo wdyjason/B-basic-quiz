@@ -40,12 +40,14 @@ class UserServiceTest {
         User receivedUser = User.builder()
                 .name("test")
                 .avatar("url")
+                .age(18L)
                 .description("des")
                 .build();
 
         User returnedUser = User.builder()
                 .id(1L)
                 .name("test")
+                .age(18L)
                 .avatar("url")
                 .description("des")
                 .build();
@@ -63,6 +65,7 @@ class UserServiceTest {
 
         User returnedUser = User.builder()
                 .id(1L)
+                .age(18L)
                 .name("test")
                 .avatar("url")
                 .description("des")
@@ -70,6 +73,7 @@ class UserServiceTest {
 
         User expectedUser = User.builder()
                 .id(userId)
+                .age(18L)
                 .name("test")
                 .avatar("url")
                 .description("des")

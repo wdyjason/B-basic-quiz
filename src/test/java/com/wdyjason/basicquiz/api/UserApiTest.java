@@ -38,7 +38,12 @@ class UserApiTest {
     public void setUp() {
         userRepository.deleteAll();
         educationRepository.deleteAll();
-        savedUserId = userRepository.save(User.builder().name("test").avatar("url").description("des").build()).getId();
+        savedUserId = userRepository.save(User.builder()
+                .name("test")
+                .age(18L)
+                .avatar("url")
+                .description("des")
+                .build()).getId();
         savedEduId = educationRepository.save(Education.builder()
                 .userId(savedUserId)
                 .title("title")
@@ -49,7 +54,7 @@ class UserApiTest {
 
     @Test
     public void shouldCreateUserSuccessfully() throws Exception {
-        String postUser = "{\"name\": \"test\", \"avatar\":\"url\", \"description\":\"des\"}";
+        String postUser = "{\"name\": \"test\", \"age\":18,\"avatar\":\"url\", \"description\":\"des\"}";
         mockMvc.perform(post("/users").content(postUser).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string("2"))
                 .andExpect(status().isCreated());
@@ -60,6 +65,7 @@ class UserApiTest {
         mockMvc.perform(get("/users/{id}", savedUserId))
                 .andExpect(jsonPath("$.id", is(savedUserId.intValue())))
                 .andExpect(jsonPath("$.name", is("test")))
+                .andExpect(jsonPath("$.age", is(18)))
                 .andExpect(jsonPath("$.avatar", is("url")))
                 .andExpect(jsonPath("$.description", is("des")))
                 .andExpect(status().isOk());

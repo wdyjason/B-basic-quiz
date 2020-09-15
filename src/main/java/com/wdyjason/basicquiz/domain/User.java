@@ -15,6 +15,8 @@ public class User {
 
     private String name;
 
+    private Long age;
+
     private String avatar;
 
     private String description;
