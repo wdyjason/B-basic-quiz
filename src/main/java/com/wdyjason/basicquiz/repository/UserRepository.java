@@ -27,6 +27,7 @@ public class UserRepository {
     }
 
     public Optional<User> findOneById(long id) {
+        // GTB: 可以直接用 Stream 替代下面的 for 语句
         for (User user : userDataSource) {
             if (user.getId() == id) {
                 return Optional.of(user);

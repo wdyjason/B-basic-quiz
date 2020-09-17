@@ -21,6 +21,7 @@ public class EducationRepository {
         return receivedEdu;
     }
 
+    // GTB: - 尽量不要为测试单独实现只用于测试目的的方法（deleteAll）
     public void deleteAll() {
         educationDataSource.clear();
         nextId.set(0);

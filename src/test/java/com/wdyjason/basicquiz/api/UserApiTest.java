@@ -52,6 +52,7 @@ class UserApiTest {
                 .build()).getId();
     }
 
+    // GTB: - 在 java 技术栈上，通常测试命名用全小写加下划线分隔的风格
     @Test
     public void shouldCreateUserSuccessfully() throws Exception {
         String postUser = "{\"name\": \"test\", \"age\":18,\"avatar\":\"url\", \"description\":\"des\"}";

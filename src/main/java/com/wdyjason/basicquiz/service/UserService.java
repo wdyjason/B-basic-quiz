@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
 
+    // GTB: - 不需要写这个 @Autowired 了
     @Autowired
     private UserRepository userRepository;
 
@@ -34,6 +35,7 @@ public class UserService {
 
     public User findOneUser(Long userId) throws UserNotFoundException {
         Optional<User> findResult = userRepository.findOneById(userId);
+        // GTB: - 用 Optional 了，就不需要在 if (!findResult.isPresent())，自己研究一下哈
         if (!findResult.isPresent()) {
             throw new UserNotFoundException("user not found!");
         }
@@ -47,6 +49,7 @@ public class UserService {
     }
 
     public List<Education> findUserEducations(long userId) {
+        // GTB: + 按 year 做了升序，不错！
         return educationRepository.findByUserId(userId).stream()
                 .sorted(Comparator.comparing(Education::getYear))
                 .collect(Collectors.toList());

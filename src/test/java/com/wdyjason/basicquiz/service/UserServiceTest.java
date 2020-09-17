@@ -93,6 +93,7 @@ class UserServiceTest {
 
     }
 
+    // GTB: - 运行全部测试时，这个测试是失败的
     @Test
     public void shouldCreateEducationSuccess() throws UserNotFoundException {
         Education receivedEdu = Education.builder()
