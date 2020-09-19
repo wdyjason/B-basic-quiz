@@ -117,7 +117,7 @@ class UserServiceTest {
                 .title("title")
                 .description("des")
                 .build();
-
+        when(userRepository.findOneById(1L)).thenReturn(Optional.of(new User()));
         when(educationRepository.save(receivedEdu)).thenReturn(returnedEdu);
 
         Education result = userService.saveEducation(1L, receivedEdu);

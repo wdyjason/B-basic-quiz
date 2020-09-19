@@ -35,11 +35,7 @@ public class UserService {
 
     public User findOneUser(Long userId) throws UserNotFoundException {
         Optional<User> findResult = userRepository.findOneById(userId);
-        // GTB: - 用 Optional 了，就不需要在 if (!findResult.isPresent())，自己研究一下哈
-        if (!findResult.isPresent()) {
-            throw new UserNotFoundException("user not found!");
-        }
-        return findResult.get();
+        return findResult.orElseThrow(UserNotFoundException::new);
     }
 
     public Education saveEducation(Long userId, Education receivedEdu) throws UserNotFoundException {
