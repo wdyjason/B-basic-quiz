@@ -1,6 +1,7 @@
 package com.wdyjason.basicquiz.repository;
 
 import com.wdyjason.basicquiz.domain.Education;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -10,26 +11,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 @Repository
-public class EducationRepository {
-    private final List<Education> educationDataSource = new ArrayList<>();
-    private static AtomicLong nextId = new AtomicLong(0);
+public interface EducationRepository extends CrudRepository<Education, Long> {
 
-    public Education save(Education receivedEdu) {
-        Long newId = nextId.getAndIncrement();
-        receivedEdu.setId(newId);
-        educationDataSource.add(receivedEdu);
-        return receivedEdu;
-    }
-
-    // GTB: - 尽量不要为测试单独实现只用于测试目的的方法（deleteAll）
-    public void deleteAll() {
-        educationDataSource.clear();
-        nextId.set(0);
-    }
-
-    public List<Education> findByUserId(long userId) {
-        return educationDataSource.stream()
-                .filter(f -> f.getUserId() == userId)
-                .collect(Collectors.toList());
-    }
+    List<Education> findByUserId(long userId);
 }

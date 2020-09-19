@@ -4,6 +4,8 @@ import com.wdyjason.basicquiz.domain.Education;
 import com.wdyjason.basicquiz.domain.User;
 import com.wdyjason.basicquiz.repository.EducationRepository;
 import com.wdyjason.basicquiz.repository.UserRepository;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +38,6 @@ class UserApiTest {
 
     @BeforeEach
     public void setUp() {
-        userRepository.deleteAll();
-        educationRepository.deleteAll();
         savedUserId = userRepository.save(User.builder()
                 .name("test")
                 .age(18L)
@@ -52,13 +52,19 @@ class UserApiTest {
                 .build()).getId();
     }
 
+    @AfterEach
+    public void cleanup() {
+        userRepository.deleteAll();
+        educationRepository.deleteAll();
+    }
+
     // GTB: - 在 java 技术栈上，通常测试命名用全小写加下划线分隔的风格
     @Test
     public void shouldCreateUserSuccessfully() throws Exception {
         String postUser = "{\"name\": \"test\", \"age\":18,\"avatar\":\"url\", \"description\":\"des\"}";
         mockMvc.perform(post("/users").content(postUser).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(content().string("2"))
                 .andExpect(status().isCreated());
+        assertEquals(2, userRepository.count());
     }
 
     @Test
@@ -75,8 +81,8 @@ class UserApiTest {
     @Test
     public void shouldCreateEducationSuccess() throws Exception {
         String postEdu = "{\"userId\":1, \"year\":2020, \"title\":\"title\", \"description\":\"des\"}";
-        mockMvc.perform(post("/users/{id}/educations", 1).content(postEdu).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.userId", is(1)))
+        mockMvc.perform(post("/users/{id}/educations", savedUserId).content(postEdu).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.userId", is(savedUserId.intValue())))
                 .andExpect(jsonPath("$.title", is("title")))
                 .andExpect(jsonPath("$.year", is(2020)))
                 .andExpect(jsonPath("$.description", is("des")))
