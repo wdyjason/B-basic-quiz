@@ -2,6 +2,7 @@ package com.wdyjason.basicquiz.service;
 
 import com.wdyjason.basicquiz.domain.Education;
 import com.wdyjason.basicquiz.domain.User;
+import com.wdyjason.basicquiz.entity.UserEntity;
 import com.wdyjason.basicquiz.exception.UserNotFoundException;
 import com.wdyjason.basicquiz.repository.EducationRepository;
 import com.wdyjason.basicquiz.repository.UserRepository;
@@ -15,6 +16,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static com.wdyjason.basicquiz.utils.Domain2Entity.fromEdu;
+import static com.wdyjason.basicquiz.utils.Domain2Entity.fromUser;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -52,7 +55,7 @@ class UserServiceTest {
                 .description("des")
                 .build();
 
-        when(userRepository.save(receivedUser)).thenReturn(returnedUser);
+        when(userRepository.save(fromUser(receivedUser))).thenReturn(fromUser(returnedUser));
 
         Long result = userService.saveUser(receivedUser);
 
@@ -78,7 +81,7 @@ class UserServiceTest {
                 .avatar("url")
                 .description("des")
                 .build();
-        when(userRepository.findOneById(userId)).thenReturn(Optional.of(returnedUser));
+        when(userRepository.findOneById(userId)).thenReturn(Optional.of(fromUser(returnedUser)));
 
         User result = userService.findOneUser(userId);
 
@@ -102,6 +105,13 @@ class UserServiceTest {
                 .description("des")
                 .build();
 
+        Education toSavedEdu = Education.builder()
+                .userId(1L)
+                .year(2020L)
+                .title("title")
+                .description("des")
+                .build();
+
         Education returnedEdu = Education.builder()
                 .id(1L)
                 .userId(1L)
@@ -117,8 +127,9 @@ class UserServiceTest {
                 .title("title")
                 .description("des")
                 .build();
-        when(userRepository.findOneById(1L)).thenReturn(Optional.of(new User()));
-        when(educationRepository.save(receivedEdu)).thenReturn(returnedEdu);
+        UserEntity constraintUser = UserEntity.builder().id(1L).build();
+        when(userRepository.findOneById(1L)).thenReturn(Optional.of(constraintUser));
+        when(educationRepository.save(fromEdu(toSavedEdu, constraintUser))).thenReturn(fromEdu(returnedEdu, constraintUser));
 
         Education result = userService.saveEducation(1L, receivedEdu);
         assertEquals(result, expectEdu);
@@ -142,7 +153,9 @@ class UserServiceTest {
                 .description("des")
                 .build();
 
-        when(educationRepository.findByUserId(1L)).thenReturn(Arrays.asList(returnedEdu));
+        UserEntity constraintUser = UserEntity.builder().id(1L).build();
+
+        when(educationRepository.findByUserId(1L)).thenReturn(Arrays.asList(fromEdu(returnedEdu, constraintUser)));
 
         List<Education> result = userService.findUserEducations(1L);
 

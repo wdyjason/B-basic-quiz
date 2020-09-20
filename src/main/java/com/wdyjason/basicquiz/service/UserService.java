@@ -2,9 +2,11 @@ package com.wdyjason.basicquiz.service;
 
 import com.wdyjason.basicquiz.domain.Education;
 import com.wdyjason.basicquiz.domain.User;
+import com.wdyjason.basicquiz.entity.UserEntity;
 import com.wdyjason.basicquiz.exception.UserNotFoundException;
 import com.wdyjason.basicquiz.repository.EducationRepository;
 import com.wdyjason.basicquiz.repository.UserRepository;
+import com.wdyjason.basicquiz.utils.Entity2Domain;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,15 +15,17 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.wdyjason.basicquiz.utils.Domain2Entity.fromEdu;
+import static com.wdyjason.basicquiz.utils.Domain2Entity.fromUser;
+import static com.wdyjason.basicquiz.utils.Entity2Domain.toEdu;
+import static com.wdyjason.basicquiz.utils.Entity2Domain.toUser;
+
 @Service
 public class UserService {
 
-    // GTB: - 不需要写这个 @Autowired 了
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private EducationRepository educationRepository;
+    private final EducationRepository educationRepository;
 
     public UserService(UserRepository userRepository, EducationRepository educationRepository) {
         this.userRepository = userRepository;
@@ -30,23 +34,27 @@ public class UserService {
 
 
     public Long saveUser(User receivedUser) {
-        return userRepository.save(receivedUser).getId();
+        return userRepository.save(fromUser(receivedUser)).getId();
     }
 
     public User findOneUser(Long userId) throws UserNotFoundException {
-        Optional<User> findResult = userRepository.findOneById(userId);
-        return findResult.orElseThrow(UserNotFoundException::new);
+        return toUser(findOneUserEntity(userId));
+    }
+
+    public UserEntity findOneUserEntity(Long userId) throws UserNotFoundException {
+        return userRepository.findOneById(userId).orElseThrow(UserNotFoundException::new);
     }
 
     public Education saveEducation(Long userId, Education receivedEdu) throws UserNotFoundException {
-        findOneUser(userId);
+        UserEntity user = findOneUserEntity(userId);
         receivedEdu.setUserId(userId);
-        return educationRepository.save(receivedEdu);
+        return toEdu(educationRepository.save(fromEdu(receivedEdu, user)));
     }
 
     public List<Education> findUserEducations(long userId) {
         // GTB: + 按 year 做了升序，不错！
         return educationRepository.findByUserId(userId).stream()
+                .map(Entity2Domain::toEdu)
                 .sorted(Comparator.comparing(Education::getYear))
                 .collect(Collectors.toList());
     }

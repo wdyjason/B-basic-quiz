@@ -1,17 +1,14 @@
 package com.wdyjason.basicquiz.repository;
 
 import com.wdyjason.basicquiz.domain.User;
+import com.wdyjason.basicquiz.entity.UserEntity;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
-public interface UserRepository extends CrudRepository<User, Long> {
+public interface UserRepository extends CrudRepository<UserEntity, Long> {
 
-    Optional<User> findOneById(long id);
+    Optional<UserEntity> findOneById(long id);
 }

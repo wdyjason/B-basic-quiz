@@ -1,17 +1,14 @@
 package com.wdyjason.basicquiz.repository;
 
 import com.wdyjason.basicquiz.domain.Education;
+import com.wdyjason.basicquiz.entity.EducationEntity;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
 
 @Repository
-public interface EducationRepository extends CrudRepository<Education, Long> {
+public interface EducationRepository extends CrudRepository<EducationEntity, Long> {
 
-    List<Education> findByUserId(long userId);
+    List<EducationEntity> findByUserId(long userId);
 }

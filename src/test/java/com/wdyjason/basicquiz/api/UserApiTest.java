@@ -2,6 +2,8 @@ package com.wdyjason.basicquiz.api;
 
 import com.wdyjason.basicquiz.domain.Education;
 import com.wdyjason.basicquiz.domain.User;
+import com.wdyjason.basicquiz.entity.EducationEntity;
+import com.wdyjason.basicquiz.entity.UserEntity;
 import com.wdyjason.basicquiz.repository.EducationRepository;
 import com.wdyjason.basicquiz.repository.UserRepository;
 import org.junit.jupiter.api.AfterAll;
@@ -38,14 +40,16 @@ class UserApiTest {
 
     @BeforeEach
     public void setUp() {
-        savedUserId = userRepository.save(User.builder()
+        UserEntity constraintUser = userRepository.save(UserEntity.builder()
                 .name("test")
                 .age(18L)
                 .avatar("url")
                 .description("des")
-                .build()).getId();
-        savedEduId = educationRepository.save(Education.builder()
-                .userId(savedUserId)
+                .build());
+        savedUserId = constraintUser.getId();
+
+        savedEduId = educationRepository.save(EducationEntity.builder()
+                .user(constraintUser)
                 .title("title")
                 .year(2020L)
                 .description("des")
@@ -54,8 +58,8 @@ class UserApiTest {
 
     @AfterEach
     public void cleanup() {
-        userRepository.deleteAll();
         educationRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     // GTB: - 在 java 技术栈上，通常测试命名用全小写加下划线分隔的风格
