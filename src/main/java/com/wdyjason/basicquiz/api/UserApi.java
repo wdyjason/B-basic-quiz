@@ -19,7 +19,7 @@ public class UserApi {
     @Autowired
     private UserService userService;
 
-    @PostMapping("")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Long createAUser(@RequestBody @Valid User newUser) {
         return userService.saveUser(newUser);
