@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
-import javax.persistence.EntityManager;
 
 import java.util.Optional;
 
@@ -17,14 +17,14 @@ import static org.junit.jupiter.api.Assertions.*;
 class UserRepositoryTest {
 
     @Autowired
-    private EntityManager entityManager;
+    private TestEntityManager entityManager;
 
     @Autowired
     private UserRepository userRepository;
 
     @Test
     public void should_find_one_by_id_success() throws Exception {
-        entityManager.persist(UserEntity.builder()
+        entityManager.persistAndFlush(UserEntity.builder()
                 .name("test")
                 .age(19L)
                 .avatar("url")
